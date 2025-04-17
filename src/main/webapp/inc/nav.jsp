@@ -2,7 +2,7 @@
 <%
 	String admin = (String)session.getAttribute("admin");
 	if(admin == null){
-		response.sendRedirect("/cashbook/Form/loginForm.jsp");
+		response.sendRedirect("/cashbook/Form/login.jsp");
 		return;
 	}
 %>

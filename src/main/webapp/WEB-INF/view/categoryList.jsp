@@ -3,43 +3,12 @@
 <%@ page import="dto.*" %>
 <%@ page import="model.*" %>
 <%
-	// 페이징 변수
-    int currentPage = 1;
-    int rowPerPage = 8;
-    int lastPage = 0;
-
-    String kind = "";
-    String title = "";
-
-    // request 값 받기
-    if(request.getParameter("currentPage") != null){
-        currentPage = Integer.parseInt(request.getParameter("currentPage"));
-    }
-
-    if(request.getParameter("kind") != null){
-        kind = request.getParameter("kind");
-    }
-
-    if(request.getParameter("title") != null){
-        title = request.getParameter("title");
-    }
-
-    // 페이징 Class
-    Paging p = new Paging();
-    
-    // 페이징 옵션으로 현재 페이지와 한 페이지에 보여줄 데이터 수 변수로 넣기
-    p.setCurrentPage(currentPage);
-    p.setRowPerPage(rowPerPage);
-
-    // 카테고리 모델
-    CategoryDao ctDao = new CategoryDao();
-    
-    // 카테고리 리스트 데이터 가져와서 출력
-    ArrayList<Category> ctList = ctDao.selectCategoryList(p, kind, title);
-    
-    // 전체 페이지와 마지막 페이지 가져오기
-    int totalRow = ctDao.selectListRow(kind, title);
-    lastPage = p.getLastPage(totalRow);
+	String kind = (String)request.getAttribute("kind");
+	String title = (String)request.getAttribute("title");
+	int currentPage  = (Integer)request.getAttribute("currentPage");
+	int lastPage = (Integer)request.getAttribute("lastPage");
+	
+	ArrayList<Category> ctList = (ArrayList<Category>)request.getAttribute("ctList");
 %>
 
 <!DOCTYPE html>
@@ -67,7 +36,7 @@
         </div>
     </div>
 
-    <form action="/cashbook/Form/categoryList.jsp" method="post" class="form-inline mb-3">
+    <form action="categoryList" method="post" class="form-inline mb-3">
         <div class="form-group mr-2">
             <select name="kind" class="form-control">
                 <option value="">전체</option>
@@ -104,12 +73,12 @@
                         <td><%=ct.getTitle()%></td>
                         <td><%=ct.getCreateDate()%></td>
                         <td>
-                            <a href="/cashbook/Form/updateCategoryTitleForm.jsp?num=<%=ct.getCategoryNo()%>" class="btn btn-sm btn-warning">
+                            <a href="updateCategoryTitle?num=<%=ct.getCategoryNo()%>" class="btn btn-sm btn-warning">
                                 <i class="fas fa-edit"></i> 수정
                             </a>
                         </td>
                         <td>
-                            <a href="/cashbook/Action/deleteCategory.jsp?num=<%=ct.getCategoryNo()%>" class="btn btn-sm btn-danger">
+                            <a href="deleteCategory?num=<%=ct.getCategoryNo()%>" class="btn btn-sm btn-danger">
                                 <i class="fas fa-trash-alt"></i> 삭제
                             </a>
                         </td>
@@ -123,15 +92,15 @@
     <!-- Pagination -->
     <div class="d-flex justify-content-center mt-4">
         <div class="btn-group" role="group" aria-label="Pagination">
-            <a class="btn btn-outline-secondary btn-sm" href="/cashbook/Form/categoryList.jsp?currentPage=1&kind=<%=kind%>&title=<%=title%>">처음</a>
+            <a class="btn btn-outline-secondary btn-sm" href="categoryList?currentPage=1&kind=<%=kind%>&title=<%=title%>">처음</a>
             <% if(currentPage > 1){ %>
-                <a class="btn btn-outline-secondary btn-sm" href="/cashbook/Form/categoryList.jsp?currentPage=<%=currentPage - 1%>&kind=<%=kind%>&title=<%=title%>">이전</a>
+                <a class="btn btn-outline-secondary btn-sm" href="categoryList?currentPage=<%=currentPage - 1%>&kind=<%=kind%>&title=<%=title%>">이전</a>
             <% } %>
             <span class="btn btn-light btn-sm disabled"><%=currentPage%> / <%=lastPage%></span>
             <% if(currentPage < lastPage){ %>
-                <a class="btn btn-outline-secondary btn-sm" href="/cashbook/Form/categoryList.jsp?currentPage=<%=currentPage + 1%>&kind=<%=kind%>&title=<%=title%>">다음</a>
+                <a class="btn btn-outline-secondary btn-sm" href="categoryList?currentPage=<%=currentPage + 1%>&kind=<%=kind%>&title=<%=title%>">다음</a>
             <% } %>
-            <a class="btn btn-outline-secondary btn-sm" href="/cashbook/Form/categoryList.jsp?currentPage=<%=lastPage%>&kind=<%=kind%>&title=<%=title%>">마지막</a>
+            <a class="btn btn-outline-secondary btn-sm" href="categoryList?currentPage=<%=lastPage%>&kind=<%=kind%>&title=<%=title%>">마지막</a>
         </div>
     </div>
 </div>

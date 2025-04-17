@@ -1,12 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
-<%
-    String login = "";
-    if(request.getParameter("login") != null){	// 로그인 실패시 파람 값으로 error 메시지가 들어옴
-        login = request.getParameter("login");
-    }
-%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,6 +31,11 @@
 </head>
 <body>
 
+<%
+	Object obj = request.getAttribute("error");
+	String error = (String)obj;
+%>
+
 <div class="container">
     <div class="card card-login shadow-lg border-0">
         <div class="card-body p-5">
@@ -47,13 +44,13 @@
                 <h5 class="text-gray-900 mt-2">로그인</h5>
             </div>
 
-            <% if(!login.equals("")) { %>
+            <% if(!error.equals("")) { %>
                 <div class="alert alert-danger text-center" role="alert">
                     ❗ 로그인 실패: 아이디 또는 비밀번호를 확인해주세요.
                 </div>
             <% } %>
 
-            <form class="user" action="/cashbook/Action/loginAction.jsp" method="post">
+            <form class="user" action="login" method="post">
                 <div class="form-group">
                     <input type="text" name="id" class="form-control form-control-user" value="admin" readonly required>
                 </div>
