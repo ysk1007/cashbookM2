@@ -2,23 +2,6 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ page import="dto.*" %>
 <%@ page import="model.*" %>
-
-<%
-    // 로그인 확인
-    String admin = (String)session.getAttribute("admin");
-    if(admin == null){
-        response.sendRedirect("/cashbook/loginForm.jsp");
-        return;
-    }
-
-    // 요청 파라미터 값 받아오기
-    int num = Integer.parseInt(request.getParameter("num"));
-
-    // 카테고리 정보 가져오기
-    CategoryDao ctDao = new CategoryDao();
-    Category ct = ctDao.selectCategoryOne(num);
-%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,11 +15,16 @@
 
 <jsp:include page="/inc/nav.jsp" />
 
+<%
+	int num = (Integer)request.getAttribute("num");
+	Category ct = (Category)request.getAttribute("ct");
+%>
+
 <div class="container mt-5">
     <h3 class="mb-4 text-gray-800 font-weight-bold">✏️ 카테고리 수정</h3>
 
     <!-- 카테고리 수정 폼 -->
-    <form action="/cashbook/updateCategoryTitleAction.jsp" method="post" class="card shadow p-4">
+    <form action="updateCategory" method="post" class="card shadow p-4">
         <!-- 카테고리 번호 (숨김) -->
         <input type="hidden" name="num" value="<%=num%>">
 

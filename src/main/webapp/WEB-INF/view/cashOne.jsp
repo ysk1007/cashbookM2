@@ -4,19 +4,15 @@
 <%@ page import="java.util.*" %>
 <%
 	// requset 받기
-    int cashNo = Integer.parseInt(request.getParameter("cashNo"));
+    int cashNo = (Integer)request.getAttribute("cashNo");
 
-	// Cash 모델에서 캐시 데이터 하나 가져옴
-    CashDao cashDao = new CashDao();
-    HashMap<String, Object> map = cashDao.selectCashOne(cashNo);
-    
-    // Receit 모델에서 캐시에 영수증 데이터 가져옴
-    ReceitDao reDao = new ReceitDao();
-    Receit re = reDao.selectReceitOne(cashNo);
+    HashMap<String, Object> map = (HashMap<String, Object>)request.getAttribute("map");
+
+    Receit re = (Receit)request.getAttribute("re");
 
     // 수입/지출 텍스트 Color
-    String kind = map.get("kind").toString();
-    String kindColor = kind.equals("수입") ? "text-success" : "text-danger";
+    String kind = (String)request.getAttribute("kind");
+    String kindColor = (String)request.getAttribute("kindColor");
 %>
 
 <!DOCTYPE html>
@@ -40,7 +36,7 @@
                     <h3 class="h5 fw-bold text-primary mb-0">💳 Cash 상세 정보</h3>
                 </div>
                 <div class="card-body">
-                    <form action="/cashbook/Form/dateList.jsp?date=<%=map.get("cashDate")%>" method="post" enctype="multipart/form-data">
+                    <form action="dateList?date=<%=map.get("cashDate")%>" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="cashNo" value="<%=map.get("cashNo")%>">
 
                         <!-- 날짜 -->
@@ -84,7 +80,7 @@
                                 
                                 <!--  삭제 버튼 -->
                                 <div>
-                                    <a href="/cashbook/Action/deleteReceit.jsp?cashNo=<%=cashNo%>&fileName=<%=re.getFileName()%>" class="btn btn-sm btn-outline-danger">
+                                    <a href="deleteReceit?cashNo=<%=cashNo%>&fileName=<%=re.getFileName()%>" class="btn btn-sm btn-outline-danger">
                                         <i class="fas fa-trash-alt"></i> 영수증 삭제
                                     </a>
                                 </div>
@@ -93,7 +89,7 @@
                             %>
                                 <p class="text-muted">영수증 이미지를 첨부해주세요.</p>
                                 <!--  영수증 첨부 버튼 -->
-                                <a href="/cashbook/Form/insertReceitForm.jsp?cashNo=<%=cashNo%>" class="btn btn-sm btn-outline-primary">
+                                <a href="insertReceit?cashNo=<%=cashNo%>" class="btn btn-sm btn-outline-primary">
                                     <i class="fas fa-upload"></i> 영수증 첨부
                                 </a>
                             <%

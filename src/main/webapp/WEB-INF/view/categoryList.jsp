@@ -27,10 +27,10 @@
 
     <div class="d-flex justify-content-between mb-3">
         <div>
-            <a href="/cashbook/Form/insertCategoryForm.jsp" class="btn btn-primary btn-sm">
+            <a href="insertCategory" class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i> 카테고리 추가
             </a>
-            <a href="/cashbook/Form/monthList.jsp" class="btn btn-outline-secondary btn-sm">
+            <a href="monthList" class="btn btn-outline-secondary btn-sm">
                 <i class="fas fa-calendar-alt"></i> 달력으로 이동
             </a>
         </div>
@@ -73,7 +73,7 @@
                         <td><%=ct.getTitle()%></td>
                         <td><%=ct.getCreateDate()%></td>
                         <td>
-                            <a href="updateCategoryTitle?num=<%=ct.getCategoryNo()%>" class="btn btn-sm btn-warning">
+                            <a href="updateCategory?num=<%=ct.getCategoryNo()%>" class="btn btn-sm btn-warning">
                                 <i class="fas fa-edit"></i> 수정
                             </a>
                         </td>

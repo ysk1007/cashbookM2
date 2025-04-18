@@ -160,8 +160,6 @@ public class CategoryDao {
 		
 		try {
 			conn = DBUtil.getConnection();
-		} catch (Exception e) {
-			e.printStackTrace();
 			// 쿼리
 			String sql = "SELECT "
 					+ " category_no AS categoryNo,"
@@ -191,6 +189,8 @@ public class CategoryDao {
 				
 				list.add(ct);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			conn.close();
 		}
@@ -210,8 +210,6 @@ public class CategoryDao {
 		
 		try {
 			conn = DBUtil.getConnection();
-		} catch (Exception e) {
-			e.printStackTrace();
 			// 수정 쿼리
 			String sql = "UPDATE category SET "
 					+ " kind = ?,"
@@ -234,6 +232,8 @@ public class CategoryDao {
 			if(row == 1) {
 				isSuccess = true;
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}	finally {
 			conn.close();
 		}
@@ -253,8 +253,7 @@ public class CategoryDao {
 		
 		try {
 			conn = DBUtil.getConnection();
-		} catch (Exception e) {
-			e.printStackTrace();
+			
 			// 삽입 쿼리
 			String sql = "INSERT IGNORE INTO category(kind,title) VALUES(?,?)";
 			
@@ -275,6 +274,8 @@ public class CategoryDao {
 			else { // 비정상
 				
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			conn.close();
 		}
@@ -292,9 +293,7 @@ public class CategoryDao {
 		
 		try {
 			conn = DBUtil.getConnection();
-		} catch (Exception e) {
-			e.printStackTrace();
-			// 수정 쿼리
+			// 삭제 쿼리
 			String sql = "DELETE IGNORE FROM category"
 					+ " WHERE category_no = ?";
 			
@@ -308,10 +307,12 @@ public class CategoryDao {
 			
 			// 쿼리 디버깅
 			//System.out.println(stmt);
-
+	
 			if(row == 1) {
 				isSuccess = true;
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			conn.close();
 		}

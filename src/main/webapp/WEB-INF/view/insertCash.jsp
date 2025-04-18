@@ -5,25 +5,15 @@
 <%
 	// requset 값 받기
 	// 날짜 형태
-	String targetDate = request.getParameter("date"); // 2025-00-00
+	String targetDate = (String)request.getAttribute("date");
 	
 	// 수입/지출
-	String kind = "수입";
-	if(request.getParameter("kind") != null){
-		kind = request.getParameter("kind");
-	}
+	String kind = (String)request.getAttribute("kind");
 	
-	int categoryNo = 0;
-	
-	if(request.getParameter("categoryNo") != null){
-		categoryNo = Integer.parseInt(request.getParameter("categoryNo"));
-	}
-	
-	// 카테고리 Model
-	CategoryDao ctDao = new CategoryDao();
-	
+	int categoryNo = (Integer)request.getAttribute("categoryNo");
+
 	// 내가 만든 카테고리들을 가져옴 ex) [수입or지출] (내용)
-	ArrayList<Category> ctList = ctDao.selectCategoryValue(kind);
+	ArrayList<Category> ctList = (ArrayList<Category>)request.getAttribute("ctList");
 %>
 
 <!DOCTYPE html>
@@ -93,7 +83,7 @@
 		</div>
 
 		<!-- 수입/지출 선택 폼 -->
-		<form method="post" action="/cashbook/Form/insertCashForm.jsp" class="mb-4">
+		<form method="get" action="insertCash" class="mb-4">
 			<input type="hidden" name="date" value="<%=targetDate%>">
 			
 			<div class="mb-3">
@@ -122,7 +112,7 @@
 		</form>
 
 		<!-- 수입/지출 추가 입력 폼 -->
-		<form action="/cashbook/Action/insertCashAction.jsp" method="post">
+		<form action="insertCash" method="post">
 			<input type="hidden" name="date" value="<%=targetDate%>">
 			<input type="hidden" name="kind" value="<%=kind%>">
 			<input type="hidden" name="categoryNo" value="<%=categoryNo%>">

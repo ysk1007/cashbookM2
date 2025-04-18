@@ -3,26 +3,26 @@
 <%@ page import="dto.*" %>
 <%@ page import="model.*" %>
 <%@ include file="/inc/nav.jsp" %>
-<%
-	// request 값 받기
-    String targetDate = request.getParameter("date");
-
-	// 년도, 월, 일 쪼개서 데이터 저장함
-    int year = Integer.parseInt(targetDate.substring(0,4));
-    int month = Integer.parseInt(targetDate.substring(5,7)) - 1;
-    int day = Integer.parseInt(targetDate.substring(8,10));
-
-    // Cash와 Receit 모델
-    CashDao cashDao = new CashDao();
-    ReceitDao reDao = new ReceitDao();
-    
-    // 타겟날의 거래 리스트 출력
-    ArrayList<Cash> cashList = cashDao.selectCashList(targetDate);
-%>
-
 <!DOCTYPE html>
 <html>
 <head>
+	<%
+	// request 값 받기
+    String targetDate = (String)request.getAttribute("date");
+
+    int year = (Integer)request.getAttribute("year");
+    int month = (Integer)request.getAttribute("month");
+    int day = (Integer)request.getAttribute("day");
+    
+    int totalIncome = (Integer)request.getAttribute("totalIncome");
+    int totalExpense = (Integer)request.getAttribute("totalExpense");
+    
+    // 타겟날의 거래 리스트 출력
+    ArrayList<Cash> cashList = (ArrayList<Cash>)request.getAttribute("cashList");
+    
+ 	// 영수증 모델에서 해당하는 캐시 번호로 접근해서 영수증 데이터 가져옴
+   	Receit re = (Receit)request.getAttribute("re");
+	%>
     <meta charset="UTF-8">
     <title><%=targetDate%> 내역</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -59,8 +59,8 @@
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
             <div class="date-title"><%=year%>.<%=month+1%>.<%=day%> 내역</div>
             <div class="d-flex gap-2">
-                <a href="/cashbook/Form/insertCashForm.jsp?date=<%=targetDate%>" class="btn btn-outline-primary btn-action">내역 추가</a>
-                <a href="/cashbook/Form/monthList.jsp?year=<%=year%>&month=<%=month%>" class="btn btn-outline-secondary btn-action">달력으로 돌아가기</a>
+                <a href="insertCash?date=<%=targetDate%>" class="btn btn-outline-primary btn-action">내역 추가</a>
+                <a href="monthList?year=<%=year%>&month=<%=month%>" class="btn btn-outline-secondary btn-action">달력으로 돌아가기</a>
             </div>
         </div>
 
@@ -78,36 +78,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%
-                        int totalIncome = 0;	// 총 수입
-                        int totalExpense = 0;	// 총 지출
-                        
-                        for(Cash c : cashList){
-                        	
-                            if(c.getKind().equals("수입")){		// kind에 따라 수입 지출액 +
-                            	totalIncome += c.getAmount();
-                            }
-                            
-                            else{
-                            	totalExpense += c.getAmount();
-                            }
-                            
-                            // 영수증 모델에서 해당하는 캐시 번호로 접근해서 영수증 데이터 가져옴
-                           	Receit re = reDao.selectReceitOne(c.getCashNo());
-                    %>
-                    <tr>
+                <%
+                	for(Cash c : cashList){
+                		%>
+                		<tr>
                         <td class="<%=c.getKind().equals("수입") ? "kind-income" : "kind-expense"%>"><%=c.getKind()%></td>
                         <!-- [타이틀] + [영수증 있으면 아이콘] -->
                         <td><%=c.getTitle()%><%=re.getFileName() != null ? "🧾":""%></td>
                         <td><%=String.format("%,d원", c.getAmount())%></td>
                         <td><%=c.getCreateDate()%></td>
-                        <td><a href="/cashbook/Form/updateCashForm.jsp?cashNo=<%=c.getCashNo()%>" class="btn btn-sm btn-outline-secondary">수정</a></td>
-                        <td><a href="/cashbook/Action/deleteCash.jsp?cashNo=<%=c.getCashNo()%>&date=<%=targetDate%>" class="btn btn-sm btn-outline-danger">삭제</a></td>
-                        <td><a href="/cashbook/Form/cashOne.jsp?cashNo=<%=c.getCashNo()%>" class="btn btn-sm btn-outline-info">보기</a></td>
+                        <td><a href="updateCash?cashNo=<%=c.getCashNo()%>" class="btn btn-sm btn-outline-secondary">수정</a></td>
+                        <td><a href="deleteCash?cashNo=<%=c.getCashNo()%>&date=<%=targetDate%>" class="btn btn-sm btn-outline-danger">삭제</a></td>
+                        <td><a href="cashOne?cashNo=<%=c.getCashNo()%>" class="btn btn-sm btn-outline-info">보기</a></td>
                     </tr>
-                    <%
-                        }
-                    %>
+                		<%
+                	}
+                %>
                 </tbody>
             </table>
         </div>

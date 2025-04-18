@@ -3,6 +3,7 @@ package model;
 import java.sql.*;
 import java.util.*;
 
+import cashbook.util.DBUtil;
 import dto.*;
 import model.*;
 
@@ -17,8 +18,7 @@ public class ReceitDao {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cashbook","root","java1234");
+		conn = DBUtil.getConnection();
 		
 		String sql = " SELECT "
 				+ " filename AS fileName"

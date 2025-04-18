@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 	// request 값 받기
-    int cashNo = Integer.parseInt(request.getParameter("cashNo"));
+    int cashNo = (Integer)request.getAttribute("cashNo");
 %>
 <!DOCTYPE html>
 <html>
@@ -65,7 +65,7 @@
     <div class="receipt-form-container">
         <h3 class="title mb-4">🧾 영수증 첨부</h3>
 
-        <form action="/cashbook/Action/insertReceitAction.jsp" method="post" enctype="multipart/form-data">
+        <form action="insertReceit" method="post" enctype="multipart/form-data">
             <!-- cashNo 넘기기 -->
             <input type="hidden" name="cashNo" value="<%=cashNo%>">
 
@@ -82,7 +82,7 @@
             </div>
 
             <!-- 뒤로가기 -->
-            <a class="back-link" href="/cashbook/Form/cashOne.jsp?cashNo=<%=cashNo%>">
+            <a class="back-link" href="cashOne?cashNo=<%=cashNo%>">
                 ← 뒤로가기
             </a>
         </form>

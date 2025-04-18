@@ -3,62 +3,31 @@
 <%@ page import="dto.*" %>
 <%@ page import="model.*" %>
 <%
-    int year = Calendar.getInstance().get(Calendar.YEAR);
-    if(request.getParameter("year") != null){
-        year = Integer.parseInt(request.getParameter("year"));
-    }
-
-    CashDao csDao = new CashDao();
+    int year = (Integer)request.getAttribute("year");
 
     // 전체 통계
-    ArrayList<HashMap<String,Object>> allStats = csDao.selectAllAmount();
+    ArrayList<HashMap<String,Object>> allStats = (ArrayList<HashMap<String,Object>>)request.getAttribute("allStats");
 
     // 연도 통계
-    ArrayList<HashMap<String,Object>> yearStats = csDao.selectYearAmount(year);
+    ArrayList<HashMap<String,Object>> yearStats = (ArrayList<HashMap<String,Object>>)request.getAttribute("yearStats");
 
     // 월 통계
-    ArrayList<HashMap<String,Object>> monthStats = csDao.selectMonthAmount(year);
-    ArrayList<HashMap<String,Object>> monthStatsIncome = new ArrayList<>();
-    ArrayList<HashMap<String,Object>> monthStatsExpense = new ArrayList<>();
-    for (HashMap<String,Object> map : monthStats) {
-        if ("수입".equals(map.get("kind"))) {
-            monthStatsIncome.add(map);
-        } else {
-            monthStatsExpense.add(map);
-        }
-    }
+    ArrayList<HashMap<String,Object>> monthStats = (ArrayList<HashMap<String,Object>>)request.getAttribute("monthStats");
+    ArrayList<HashMap<String,Object>> monthStatsIncome = (ArrayList<HashMap<String,Object>>)request.getAttribute("monthStatsIncome");
+    ArrayList<HashMap<String,Object>> monthStatsExpense = (ArrayList<HashMap<String,Object>>)request.getAttribute("monthStatsExpense");
 
     // 카테고리 통계
-    ArrayList<HashMap<String,Object>> ctStats = csDao.selectCategoryAmount(year);
-    ArrayList<HashMap<String,Object>> ctStatsIncome = new ArrayList<>();
-    ArrayList<HashMap<String,Object>> ctStatsExpense = new ArrayList<>();
-    for (HashMap<String,Object> map : ctStats) {
-        if ("수입".equals(map.get("kind"))) {
-            ctStatsIncome.add(map);
-        } else {
-            ctStatsExpense.add(map);
-        }
-    }
-
+    ArrayList<HashMap<String,Object>> ctStats = (ArrayList<HashMap<String,Object>>)request.getAttribute("ctStats");
+    ArrayList<HashMap<String,Object>> ctStatsIncome = (ArrayList<HashMap<String,Object>>)request.getAttribute("ctStatsIncome");
+    ArrayList<HashMap<String,Object>> ctStatsExpense = (ArrayList<HashMap<String,Object>>)request.getAttribute("ctStatsExpense");
+    
     // 숫자 포맷
-    NumberFormat nf = NumberFormat.getInstance();
+    NumberFormat nf = (NumberFormat)request.getAttribute("nf");
 
     // 월별 수입 데이터 처리
-    int[] incomeData = new int[12];
-    for (int i = 0; i < monthStatsIncome.size(); i++) {
-        HashMap<String, Object> map = monthStatsIncome.get(i);
-        int month = (Integer) map.get("month");
-        int amount = (Integer) map.get("amount");
-        incomeData[month - 1] = amount;
-    }
+    int[] incomeData = (int[])request.getAttribute("incomeData");
     
-    int[] expenseData = new int[12];  // 12개월
-	for (int i = 0; i < monthStatsExpense.size(); i++) {
-	    HashMap<String, Object> map = monthStatsExpense.get(i);
-	    int month = (Integer) map.get("month");
-	    int amount = (Integer) map.get("amount");
-	    expenseData[month - 1] = amount;
-	}
+    int[] expenseData = (int[])request.getAttribute("expenseData");
 %>
 <!DOCTYPE html>
 <html>
@@ -76,7 +45,7 @@
     <h3 class="text-gray-800 font-weight-bold mb-4">📊 수입/지출 통계</h3>
 
     <!-- 연도 선택 -->
-    <form method="get" action="/cashbook/Form/statistics.jsp" class="form-inline justify-content-center mb-5">
+    <form method="get" action="statistics" class="form-inline justify-content-center mb-5">
         <div class="input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text font-weight-bold bg-light">📅 연도</span>

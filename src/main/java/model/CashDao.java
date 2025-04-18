@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cashbook.util.DBUtil;
 import dto.*;
 
 public class CashDao {
@@ -17,8 +18,7 @@ public class CashDao {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cashbook","root","java1234");
+		conn = DBUtil.getConnection();
 		
 		// 쿼리
 		String sql = "SELECT"
@@ -489,33 +489,36 @@ public class CashDao {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cashbook","root","java1234");
-		
-		// 삽입 쿼리
-		String sql = "INSERT INTO cash(category_no,cash_date,amount,memo,color) VALUES(?,?,?,?,?);";
-		
-		// ? 할당
-		stmt = conn.prepareStatement(sql);
-		stmt.setInt(1, cs.getCategoryNo());
-		stmt.setString(2, cs.getCashDate());
-		stmt.setInt(3, cs.getAmount());
-		stmt.setString(4, cs.getMemo());
-		stmt.setString(5, cs.getColor());
+		try {
+			conn = DBUtil.getConnection();
+			// 삽입 쿼리
+			String sql = "INSERT INTO cash(category_no,cash_date,amount,memo,color) VALUES(?,?,?,?,?);";
+			
+			// ? 할당
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, cs.getCategoryNo());
+			stmt.setString(2, cs.getCashDate());
+			stmt.setInt(3, cs.getAmount());
+			stmt.setString(4, cs.getMemo());
+			stmt.setString(5, cs.getColor());
 
-		// 쿼리 디버깅
-		//System.out.println(stmt);
-		
-		// 쿼리 실행
-		row = stmt.executeUpdate();
-		
-		if(row == 1) {	// 정상 삽입
+			// 쿼리 디버깅
+			System.out.println(stmt);
 			
-		}
-		else { // 비정상
+			// 쿼리 실행
+			row = stmt.executeUpdate();
 			
+			if(row == 1) {	// 정상 삽입
+				
+			}
+			else { // 비정상
+				
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			conn.close();
 		}
-		
-		conn.close();
 	}
 }

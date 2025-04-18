@@ -73,7 +73,7 @@ public class AdminDao {
 			row = stmt.executeUpdate();
 			
 			// 쿼리 디버깅
-			//System.out.println(stmt);
+			System.out.println(stmt);
 
 			if(row == 1) {
 				isSuccess = true;

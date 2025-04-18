@@ -4,39 +4,22 @@
 <%@ page import="java.util.*" %>
 <%
 	// requset 값 받기
-	int cashNo = 0;
-	if(request.getParameter("cashNo") != null){
-		cashNo = Integer.parseInt(request.getParameter("cashNo"));
-	}
-
-	// Cash, Category Model
-	CashDao cashDao = new CashDao();
-	CategoryDao ctDao = new CategoryDao();
+	int cashNo = (Integer)request.getAttribute("cashNo");
 
 	// 캐시 번호 접근해서 cash 데이터 하나 가져오기
-	HashMap<String,Object> map = cashDao.selectCashOne(cashNo);
+	HashMap<String,Object> map = (HashMap<String,Object>)request.getAttribute("map");
 
 	// 가져온 cash에서 수입/지출 값 받기
-	String kind = map.get("kind").toString();
-	
-	// 만약 페이지가 수정되어서 수입/지출 값이 바뀌었다면 request로 받기
-	if(request.getParameter("kind") != null){
-		kind = request.getParameter("kind");
-	}
+	String kind = (String)request.getAttribute("kind");
 
 	// 가져온 cash에서 카테고리 값 받기
-	int categoryNo = Integer.parseInt(map.get("categoryNo").toString());
-	
-	// 만약 페이지가 수정되어서 카테고리 값이 바뀌었다면 request로 받기
-	if(request.getParameter("categoryNo") != null){
-		categoryNo = Integer.parseInt(request.getParameter("categoryNo"));
-	}
+	int categoryNo = (Integer)request.getAttribute("categoryNo");
 
 	// 가져온 cash에서 생성일 받기
-	String targetDate = map.get("cashDate").toString();
+	String targetDate = (String)request.getAttribute("targetDate");
 
 	// 카테고리 모델에서 수입/지출들의 카테고리 리스트
-	ArrayList<Category> ctList = ctDao.selectCategoryValue(kind);
+	ArrayList<Category> ctList = (ArrayList<Category>)request.getAttribute("ctList");
 %>
 
 <!DOCTYPE html>
@@ -71,7 +54,7 @@
 		</div>
 
 		<!-- 수입/지출 선택 폼 -->
-		<form method="post" action="/cashbook/Form/updateCashForm.jsp" class="row g-3 mb-4">
+		<form method="get" action="updateCash" class="row g-3 mb-4">
 			<input type="hidden" name="date" value="<%=targetDate%>">
 			<input type="hidden" name="cashNo" value="<%=cashNo%>">
 			
@@ -97,7 +80,7 @@
 		</form>
 
 		<!-- 수입/지출 수정 폼 -->
-		<form action="/cashbook/Action/updateCashAction.jsp" method="post" class="row g-3">
+		<form action="updateCash" method="post" class="row g-3">
 			<input type="hidden" name="date" value="<%=map.get("cashDate")%>">
 			<input type="hidden" name="kind" value="<%=kind%>">
 			<input type="hidden" name="categoryNo" value="<%=categoryNo%>">
